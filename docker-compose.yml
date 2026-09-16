@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.6-pg17-bookworm
+    environment:
+      POSTGRES_DB: kairos
+      POSTGRES_USER: kairos
+      POSTGRES_PASSWORD: kairos
+    ports:
+      - "127.0.0.1:54320:5432"
+    volumes:
+      - kairos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kairos -d kairos"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  kairos-postgres:

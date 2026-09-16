@@ -1,0 +1,54 @@
+# Configure the Kairos package, dependencies, tooling, and test environment.
+
+[project]
+name = "kairos"
+version = "0.1.0"
+description = "A simple conversational agent with web search"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncpg==0.31.0",
+    "fastapi[standard]>=0.141.1",
+    "logfire>=5.1.0",
+    "pgvector==0.5.0",
+    "pydantic-ai==2.43.0",
+    "pydantic-ai-harness[skills]==0.31.0",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.3",
+]
+
+[project.scripts]
+kairos = "app.cli:main"
+kairos-index = "app.knowledge_cli:main"
+kairos-migrate = "app.migrations:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"skills" = "skills"
+
+[tool.fastapi]
+entrypoint = "app.main:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.7",
+    "ty>=0.0.81",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
